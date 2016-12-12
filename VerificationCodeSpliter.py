@@ -6,7 +6,7 @@ from PIL import Image,ImageEnhance,ImageFilter,ImageChops
 
 
 
-def cut_width(im,threshold):
+def cut_width(im, threshold):
     """
     对图像宽度进行分割,把每列映射到x-axis, 存在小于阈值为1, 否则为0
     :param im: 图片
@@ -29,7 +29,7 @@ def cut_width(im,threshold):
     return reslut
 
 
-def findSplitRegion(start,list):
+def findSplitRegion(start, list):
     """
     从list的start开始找到连续1的区间,如果全是0,则返回（len(list),len(list)-1）
     :param start: list中的开始位置
@@ -129,17 +129,23 @@ def splitImage(im,split_x,split_y,width,height):
         region_ = (x_region[0], y_region[0], x_region[1], y_region[1])
         subimg = im.crop(region_)
         subimg = subimg.resize((28, 28), Image.ANTIALIAS)
-        subimg.show()
         submages.append(subimg)
     return submages
 
-im = Image.open('genimage.png') #captchaGenerate.jpg
+
+def split(images, name, save_filename):
+    for image in images:
+        pass
+
+#im = Image.open('genimage.png')
+im = Image.open("/home/zhongjianlv/ML/VerificationCodeRecognition/image/3.png")
+# im = Image.open('1.jpg')
 # im.thumbnail((100,100), Image.ANTIALIAS)
-im.show()
+# im.show()
 #找出划分区域
 im = im.convert("L")
-im.show()
-exit()
+# im.show()
+# exit()
 split_x = cut_width(im, 200)
 split_y = cut_height(im, 200, split_x)
 
@@ -147,12 +153,16 @@ split_y = cut_height(im, 200, split_x)
 submages = splitImage(im,split_x,split_y,28,28)
 
 for subimg in submages:
+    subimg.show()
     pixel = subimg.load()
     list = []
     for x in range(subimg.height):
         for y in range(subimg.width):
             list.append(pixel[y,x])
     print list
+
+
+
 
 #  convert to binary image by the table
 # cropped = autoCrop(im)
