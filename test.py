@@ -112,15 +112,6 @@ def cut_height(im,threshold,split_X):
         r_list.append(tuple)
     return r_list
 
-im = Image.open('genimage.jpg')
-# im.thumbnail((100,100), Image.ANTIALIAS)
-im.show()
-#找出划分区域
-im = im.convert("L")
-split_x = cut_width(im, 200)
-split_y = cut_height(im, 200, split_x)
-
-
 def splitImage(im,split_x,split_y,width,height):
     """
     根据区域切割图片
@@ -141,6 +132,16 @@ def splitImage(im,split_x,split_y,width,height):
         subimg.show()
         submages.append(subimg)
     return submages
+
+im = Image.open('genimage.png') #captchaGenerate.jpg
+# im.thumbnail((100,100), Image.ANTIALIAS)
+im.show()
+#找出划分区域
+im = im.convert("L")
+im.show()
+exit()
+split_x = cut_width(im, 200)
+split_y = cut_height(im, 200, split_x)
 
 #分割
 submages = splitImage(im,split_x,split_y,28,28)
