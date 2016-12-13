@@ -153,7 +153,8 @@ def splitOneImage(image):
 
 
 
-def split(imagepath, name, save_filename):
+def split(imagepath, save_filename):
+    name = imagepath + "name.txt"
     listdir = os.listdir(imagepath)
     listdir.remove("name.txt")
     f = open(name, mode="r")
@@ -185,9 +186,9 @@ def split(imagepath, name, save_filename):
     f.flush()
     f.close()
 
-basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
-_imagePath = basepath + "image2/"
-split(_imagePath, _imagePath+"name.txt", basepath + "matrix/test.csv")
+# basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
+# _imagePath = basepath + "image/"
+# split(_imagePath, _imagePath+"name.txt", basepath + "matrix/train.csv")
 
 
 #  convert to binary image by the table

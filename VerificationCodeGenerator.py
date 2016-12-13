@@ -60,5 +60,5 @@ def gene_easyVerificationCode(num, path, font):
         __gene_code(i, path, font)
 
 
-gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
-                          "/usr/share/fonts/truetype/ubuntu-font-family/")
+# gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
+#                           "/usr/share/fonts/truetype/ubuntu-font-family/")

@@ -5,7 +5,10 @@ import numpy as np
 import pandas as pd
 from sklearn import tree
 import sklearn.ensemble as ske
-
+import VerificationCodeGenerator as generator
+import VerificationCodeSpliter as spilter
+import os
+import shutil
 #保存结果
 def saveResult(result,filename):
     """
@@ -37,6 +40,36 @@ def predict(x_train, y_train, test_df, model):
     model.fit(X_train, Y_train)
     predictResult = model.predict(test_df)
     return predictResult
+
+
+
+#main
+
+if(os.path.isdir("image")):
+    shutil.rmtree("image")
+if(os.path.isdir("image2")):
+    shutil.rmtree("image2")
+if(os.path.isdir("matrix")):
+    shutil.rmtree("matrix")
+os.mkdir("image")
+os.mkdir("image2")
+os.mkdir("matrix")
+
+# 生成训练样例图片
+generator.gene_easyVerificationCode(100, "/home/zhongjianlv/ML/VerificationCodeRecognition/image/",
+                                    "/usr/share/fonts/truetype/ubuntu-font-family/")
+
+#生成测试样例图片
+generator.gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
+                          "/usr/share/fonts/truetype/ubuntu-font-family/")
+
+basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
+
+#训练图片转csv
+spilter.split(basepath+"image/", basepath + "matrix/train.csv")
+
+#测试图片转csv
+spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
 
 #读取训练数据和测试数据
 train_df = pd.read_csv('matrix/train.csv')
