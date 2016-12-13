@@ -5,6 +5,7 @@ import sys
 import math
 from PIL import Image,ImageDraw,ImageFont,ImageFilter
 
+Font = ["Ubuntu-B.ttf","Ubuntu-C.ttf","Ubuntu-L.ttf","Ubuntu-M.ttf","Ubuntu-R.ttf","UbuntuMono-R.ttf","UbuntuMono-R.ttf"]
 #生成几位数的验证码
 number = 4
 #生成验证码图片的高度和宽度
@@ -31,6 +32,8 @@ def __gene_text(save_path):
 #生成验证码
 def __gene_code(i, save_path, font_path):
     width, height = size #宽和高
+    fontid = random.randint(0,6)
+    font_path = font_path + Font[fontid]
     image = Image.new('RGBA', (width,height),bgcolor) #创建图片
     font = ImageFont.truetype(font_path, 25) #验证码的字体
     draw = ImageDraw.Draw(image)  #创建画笔
@@ -56,6 +59,5 @@ def gene_easyVerificationCode(num, path, font):
     for i in range(1, num):
         __gene_code(i, path, font)
 
-
-gene_easyVerificationCode(100, "/home/zhongjianlv/ML/VerificationCodeRecognition/image/",
-                          "/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf")
+gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/image/",
+                          "/usr/share/fonts/truetype/ubuntu-font-family/")
