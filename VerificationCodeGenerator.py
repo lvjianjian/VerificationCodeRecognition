@@ -18,13 +18,13 @@ fontcolor = (0,0,255)
 linecolor = (255,0,0)
 
 #用来随机生成一个字符串
-def __gene_text(save_path):
+def __gene_text(i, save_path):
     source = []
-    for i in range(0, number):
+    for j in range(0, number):
         source.append(str(random.choice(range(10))))
     s = "".join(source)
     f = open(save_path+'name.txt', 'a')
-    f.write(s)
+    f.write("%d %s" % (i, s))
     f.write('\n')
     f.close()
     return "".join(source)
@@ -37,7 +37,7 @@ def __gene_code(i, save_path, font_path):
     image = Image.new('RGBA', (width,height),bgcolor) #创建图片
     font = ImageFont.truetype(font_path, 25) #验证码的字体
     draw = ImageDraw.Draw(image)  #创建画笔
-    text = __gene_text(save_path) #生成字符串
+    text = __gene_text(i, save_path) #生成字符串
     font_width, font_height = font.getsize(text)
     draw.text(((width - font_width) / number, (height - font_height) / number), text,
               font=font, fill=fontcolor) #填充字符串
@@ -56,8 +56,9 @@ def gene_easyVerificationCode(num, path, font):
     :param font: 生成验证码的字体
     :return:
     """
-    for i in range(1, num):
+    for i in range(1, num + 1):
         __gene_code(i, path, font)
 
-gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/image/",
+
+gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
                           "/usr/share/fonts/truetype/ubuntu-font-family/")

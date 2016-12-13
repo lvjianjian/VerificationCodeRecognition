@@ -3,8 +3,7 @@
 
 
 from PIL import Image,ImageEnhance,ImageFilter,ImageChops
-
-
+import os
 
 def cut_width(im, threshold):
     """
@@ -133,35 +132,62 @@ def splitImage(im,split_x,split_y,width,height):
     return submages
 
 
-def split(images, name, save_filename):
-    for image in images:
-        pass
-
-#im = Image.open('genimage.png')
-im = Image.open("/home/zhongjianlv/ML/VerificationCodeRecognition/image/3.png")
-# im = Image.open('1.jpg')
-# im.thumbnail((100,100), Image.ANTIALIAS)
-# im.show()
-#找出划分区域
-im = im.convert("L")
-# im.show()
-# exit()
-split_x = cut_width(im, 200)
-split_y = cut_height(im, 200, split_x)
-
-#分割
-submages = splitImage(im,split_x,split_y,28,28)
-
-for subimg in submages:
-    subimg.show()
-    pixel = subimg.load()
-    list = []
-    for x in range(subimg.height):
-        for y in range(subimg.width):
-            list.append(pixel[y,x])
-    print list
+def splitOneImage(image):
+    """
+    分割图片返回矩阵
+    :param image: 处理后图像
+    :return: 矩阵list,每个temp对应一个矩阵
+    """
+    r = []
+    split_x = cut_width(image, 200)
+    split_y = cut_height(image, 200, split_x)
+    submages = splitImage(image, split_x, split_y, 28, 28)
+    for subimg in submages:
+        pixel = subimg.load()
+        list = []
+        for x in range(subimg.height):
+            for y in range(subimg.width):
+                list.append(pixel[y,x])
+        r.append(list)
+    return r
 
 
+
+def split(imagepath, name, save_filename):
+    listdir = os.listdir(imagepath)
+    listdir.remove("name.txt")
+    f = open(name, mode="r")
+    #读取所有验证码的值
+    dict = {}
+    s = f.readline().strip()  #验证码对应的值,去除空格
+    while s != "":
+        split = s.split(" ")
+        dict[split[0]] = split[1]
+        s = f.readline().strip()
+    f_save = open(save_filename, "w")
+    first = True
+    for image_filename in listdir:
+        im = Image.open(imagepath + image_filename)
+        im = im.convert("L")
+        code = dict[image_filename.split(".")[0]] #验证码
+        r_list = splitOneImage(im) #验证码对应的矩阵
+        for i in range(len(r_list)):
+            if(first):
+                first = False
+                string = "label"
+                for j in range(len(r_list[0])):
+                    string += (",pixel" + str(j))
+            f_save.write(string+"\n")
+            string = code[i]
+            for j in range(len(r_list[i])):
+                string += ("," + str(r_list[i][j]))
+            f_save.write(string+"\n")
+    f.flush()
+    f.close()
+
+basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
+_imagePath = basepath + "image2/"
+split(_imagePath, _imagePath+"name.txt", basepath + "matrix/test.csv")
 
 
 #  convert to binary image by the table
