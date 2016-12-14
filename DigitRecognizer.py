@@ -7,8 +7,10 @@ from sklearn import tree
 import sklearn.ensemble as ske
 import VerificationCodeGenerator as generator
 import VerificationCodeSpliter2 as spilter
+import Clearnoise as noise
 import os
 import shutil
+
 #保存结果
 def saveResult(result,filename):
     """
@@ -67,8 +69,14 @@ if(os.path.isdir("image2")):
     shutil.rmtree("image2")
 if(os.path.isdir("matrix")):
     shutil.rmtree("matrix")
+if(os.path.isdir("imagetest")):
+    shutil.rmtree("imagetest")
+if(os.path.isdir("image2test")):
+    shutil.rmtree("image2test")
 os.mkdir("image")
 os.mkdir("image2")
+os.mkdir("imagetest")
+os.mkdir("image2test")
 os.mkdir("matrix")
 
 #使用的字体
@@ -87,15 +95,23 @@ Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
 
 # 生成训练样例图片
-generator.gene_easyVerificationCode(100, "/home/zhongjianlv/ML/VerificationCodeRecognition/image/",
+generator.gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/imagetest/",
                                     Fonts)
 
 #生成测试样例图片
-generator.gene_easyVerificationCode(100, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
+generator.gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/image2test/",
                                     Fonts)
 
-basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
 
+basepath = "/home/lee/workplace/VerificationCodeRecognition/"
+
+#去除噪声
+noise.saveAsBmp(basepath+"imagetest/",basepath+"image/")
+
+noise.saveAsBmp(basepath+"image2test/",basepath+"image2/")
+
+shutil.move(basepath+"imagetest/name.txt",basepath+"image/name.txt")
+shutil.move(basepath+"image2test/name.txt",basepath+"image2/name.txt")
 #训练图片转csv
 spilter.split(basepath+"image/", basepath + "matrix/train.csv")
 
@@ -105,7 +121,7 @@ spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
 #读取训练数据和测试数据
 train_df_self = pd.read_csv('matrix/train.csv')
 # print train_df_self.size
-train_df_kaggle = pd.read_csv('/home/zhongjianlv/ML/digitRecognizer/train.csv')
+train_df_kaggle = pd.read_csv('digitRecognizer/train.csv')
 # print train_df_kaggle.size
 train_df = train_df_kaggle.append(train_df_self)
 # print train_df.size
