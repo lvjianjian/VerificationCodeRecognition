@@ -105,7 +105,7 @@ spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
 #读取训练数据和测试数据
 train_df_self = pd.read_csv('matrix/train.csv')
 # print train_df_self.size
-train_df_kaggle = pd.read_csv('/home/zhongjianlv/ML/digitRecognizer/train.csv')
+train_df_kaggle = pd.read_csv('kaggle/train.csv')
 # print train_df_kaggle.size
 train_df = train_df_kaggle.append(train_df_self)
 # print train_df.size
