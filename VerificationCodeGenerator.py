@@ -5,7 +5,6 @@ import sys
 import math
 from PIL import Image,ImageDraw,ImageFont,ImageFilter
 
-Font = ["Ubuntu-B.ttf","Ubuntu-C.ttf","Ubuntu-L.ttf","Ubuntu-M.ttf","Ubuntu-R.ttf","UbuntuMono-R.ttf","UbuntuMono-R.ttf"]
 #生成几位数的验证码
 number = 4
 #生成验证码图片的高度和宽度
@@ -30,10 +29,10 @@ def __gene_text(i, save_path):
     return "".join(source)
 
 #生成验证码
-def __gene_code(i, save_path, font_path):
+def __gene_code(i, save_path, fonts):
     width, height = size #宽和高
-    fontid = random.randint(0,6)
-    font_path = font_path + Font[fontid]
+    fontid = random.randint(0,len(fonts)-1)
+    font_path = fonts[fontid]
     image = Image.new('RGBA', (width,height),bgcolor) #创建图片
     font = ImageFont.truetype(font_path, 25) #验证码的字体
     draw = ImageDraw.Draw(image)  #创建画笔
@@ -48,17 +47,22 @@ def __gene_code(i, save_path, font_path):
     image.save(save_path + '%s.png' % i) #保存验证码图片
 
 
-def gene_easyVerificationCode(num, path, font):
+def gene_easyVerificationCode(num, path, fonts):
     """
     生成简单验证码
     :param num: 生成的验证码数量
     :param path: 存放路径
-    :param font: 生成验证码的字体
+    :param fonts: 生成验证码的字体
     :return:
     """
     for i in range(1, num + 1):
-        __gene_code(i, path, font)
+        __gene_code(i, path, fonts)
 
+if __name__ == "__main__":
+    Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"]
 
-# gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
-#                           "/usr/share/fonts/truetype/ubuntu-font-family/")
+    gene_easyVerificationCode(1, "/home/zhongjianlv/ML/VerificationCodeRecognition/imagetest/",
+                          Fonts)
