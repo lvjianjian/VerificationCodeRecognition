@@ -7,6 +7,7 @@ from sklearn import tree
 import sklearn.ensemble as ske
 import VerificationCodeGenerator as generator
 import VerificationCodeSpliter2 as spilter
+from sklearn import metrics
 import Clearnoise as noise
 import os
 import shutil
@@ -83,9 +84,9 @@ os.mkdir("matrix")
 Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-BI.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-C.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-L.ttf"
+    # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-L.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-LI.ttf"
+    # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-LI.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-MI.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-RI.ttf"

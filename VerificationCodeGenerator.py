@@ -43,9 +43,9 @@ def __gene_code(i, save_path, fonts):
     image = Image.new('RGBA', (width,height),(255, 255, 255)) #创建图片
     font = ImageFont.truetype(font_path, 25) #验证码的字体
     draw = ImageDraw.Draw(image)  #创建画笔
-    for x in range(width):
-        for y in range(height):
-            draw.point((x, y), fill=rndColor())
+    # for x in range(width):
+    #     for y in range(height):
+    #         draw.point((x, y), fill=rndColor())
     text = __gene_text(i, save_path) #生成字符串
     font_width, font_height = font.getsize(text)
     draw.text(((width - font_width) / number, (height - font_height) / number), text,
