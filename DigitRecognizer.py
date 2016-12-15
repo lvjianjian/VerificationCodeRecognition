@@ -122,7 +122,9 @@ spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
 #读取训练数据和测试数据
 train_df_self = pd.read_csv('matrix/train.csv')
 # print train_df_self.size
+
 train_df_kaggle = pd.read_csv('digitRecognizer/train.csv')
+
 # print train_df_kaggle.size
 train_df = train_df_kaggle.append(train_df_self)
 # print train_df.size
@@ -145,8 +147,8 @@ randomForest_clf = ske.RandomForestClassifier()
 test_df = pd.read_csv("matrix/test.csv")
 X_test = test_df.drop('label', axis=1).values
 Y_test = test_df['label'].values
-print "Actual Value"
-print Y_test
+# print "Actual Value"
+# print Y_test
 print "decision tree"
 # print predict(X_train, Y_train, X_test, decisionTree_clf)
 print score(X_train, Y_train, X_test, Y_test, decisionTree_clf)

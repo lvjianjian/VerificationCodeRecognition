@@ -2,3 +2,5 @@
 image*
 *.jpg
 matrix
+*.pyc
+kaggle
