@@ -12,6 +12,7 @@ import VerificationCodeGenerator as generator
 import VerificationCodeSpliter2 as spilter
 import os
 import shutil
+import Param as param
 
 #main
 
@@ -40,15 +41,16 @@ Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
 
+basepath = param.PROJECTBASEPATH
+
 # 生成训练样例图片
-generator.gene_easyVerificationCode(1000, "/home/zhongjianlv/ML/VerificationCodeRecognition/image/",
+generator.gene_easyVerificationCode(1000, basepath + "image/",
                                     Fonts)
 
 #生成测试样例图片
-generator.gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
+generator.gene_easyVerificationCode(10, basepath + "image2/",
                                     Fonts)
 
-basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
 
 #训练图片转csv
 spilter.split(basepath+"image/", basepath + "matrix/train.csv")

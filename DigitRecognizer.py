@@ -11,6 +11,7 @@ from sklearn import metrics
 import Clearnoise as noise
 import os
 import shutil
+import Param as param
 
 #保存结果
 def saveResult(result,filename):
@@ -95,16 +96,18 @@ Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"
     ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
 
+
+basepath = param.PROJECTBASEPATH
+
 # 生成训练样例图片
-generator.gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/imagetest/",
+generator.gene_easyVerificationCode(100, basepath + "imagetest/",
                                     Fonts)
 
 #生成测试样例图片
-generator.gene_easyVerificationCode(100, "/home/lee/workplace/VerificationCodeRecognition/image2test/",
+generator.gene_easyVerificationCode(100, basepath + "image2test/",
                                     Fonts)
 
 
-basepath = "/home/lee/workplace/VerificationCodeRecognition/"
 
 #去除噪声
 noise.saveAsBmp(basepath+"imagetest/",basepath+"image/")
