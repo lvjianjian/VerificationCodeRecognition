@@ -128,8 +128,8 @@ randomForest_clf = ske.RandomForestClassifier()
 test_df = pd.read_csv("matrix/test.csv")
 X_test = test_df.drop('label', axis=1).values
 Y_test = test_df['label'].values
-print "Actual Value"
-print Y_test
+# print "Actual Value"
+# print Y_test
 print "decision tree"
 # print predict(X_train, Y_train, X_test, decisionTree_clf)
 print score(X_train, Y_train, X_test, Y_test, decisionTree_clf)

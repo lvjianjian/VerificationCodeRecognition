@@ -1,3 +1,5 @@
+#!/usr/bin
+# -*- coding: utf-8 -*-
 # Deep Convolutional Network using Keras
 
 import pandas as pd
@@ -6,7 +8,53 @@ import keras.layers.core as core
 import keras.layers.convolutional as conv
 import keras.models as models
 import keras.utils.np_utils as kutils
+import VerificationCodeGenerator as generator
+import VerificationCodeSpliter2 as spilter
+import os
+import shutil
 
+#main
+
+if(os.path.isdir("image")):
+    shutil.rmtree("image")
+if(os.path.isdir("image2")):
+    shutil.rmtree("image2")
+if(os.path.isdir("matrix")):
+    shutil.rmtree("matrix")
+os.mkdir("image")
+os.mkdir("image2")
+os.mkdir("matrix")
+
+#使用的字体
+Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-BI.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-C.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-L.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-LI.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-MI.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-RI.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-B.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-BI.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"
+    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
+
+# 生成训练样例图片
+generator.gene_easyVerificationCode(1000, "/home/zhongjianlv/ML/VerificationCodeRecognition/image/",
+                                    Fonts)
+
+#生成测试样例图片
+generator.gene_easyVerificationCode(10, "/home/zhongjianlv/ML/VerificationCodeRecognition/image2/",
+                                    Fonts)
+
+basepath = "/home/zhongjianlv/ML/VerificationCodeRecognition/"
+
+#训练图片转csv
+spilter.split(basepath+"image/", basepath + "matrix/train.csv")
+
+#测试图片转csv
+spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
 
 # The competition datafiles are in the directory ../input
 # Read competition data files:
@@ -56,12 +104,23 @@ cnn.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accurac
 
 cnn.fit(trainX, trainY, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
 
+
+# testX = test.reshape(test.shape[0], 28, 28, 1)
+# testX = testX.astype(float)
+# testX /= 255.0
+#
+# yPred = cnn.predict_classes(testX)
+#
+# np.savetxt('mnist-vggnet.csv', np.c_[range(1,len(yPred)+1),yPred], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')
+
+textY = test[:, :1]
 testX = test[:, 1:].reshape(test.shape[0], 28, 28, 1)
 testX = testX.astype(float)
 testX /= 255.0
 
-
 yPred = cnn.predict_classes(testX)
+print textY
+# score = cnn.score(testX, testY)
 print yPred
 
 # np.savetxt('mnist-vggnet.csv', np.c_[range(1,len(yPred)+1),yPred], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')

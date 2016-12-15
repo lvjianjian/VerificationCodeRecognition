@@ -137,7 +137,7 @@ def split(imagepath, save_filename):
                 string = "label"
                 for j in range(len(r_list[0])):
                     string += (",pixel" + str(j))
-            f_save.write(string+"\n")
+                f_save.write(string+"\n")
             string = code[i]
             for j in range(len(r_list[i])):
                 string += ("," + str(r_list[i][j]))
