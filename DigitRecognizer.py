@@ -65,71 +65,77 @@ def score(x_train, y_train, x_test, y_test, model):
 
 #main
 
-if(os.path.isdir("image")):
-    shutil.rmtree("image")
-if(os.path.isdir("image2")):
-    shutil.rmtree("image2")
-if(os.path.isdir("matrix")):
-    shutil.rmtree("matrix")
-if(os.path.isdir("imagetest")):
-    shutil.rmtree("imagetest")
-if(os.path.isdir("image2test")):
-    shutil.rmtree("image2test")
-os.mkdir("image")
-os.mkdir("image2")
-os.mkdir("imagetest")
-os.mkdir("image2test")
-os.mkdir("matrix")
+reGenerate = True
 
-#使用的字体
-Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-BI.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-C.ttf"
-    # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-L.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf"
-    # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-LI.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-MI.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-RI.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-B.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-BI.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"
-    ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
+if reGenerate:
+    if(os.path.isdir("image")):
+        shutil.rmtree("image")
+    if(os.path.isdir("image2")):
+        shutil.rmtree("image2")
+    if(os.path.isdir("matrix")):
+        shutil.rmtree("matrix")
+    if(os.path.isdir("imagetest")):
+        shutil.rmtree("imagetest")
+    if(os.path.isdir("image2test")):
+        shutil.rmtree("image2test")
+    os.mkdir("image")
+    os.mkdir("image2")
+    os.mkdir("imagetest")
+    os.mkdir("image2test")
+    os.mkdir("matrix")
 
-
-basepath = param.PROJECTBASEPATH
-
-# 生成训练样例图片
-generator.gene_easyVerificationCode(100, basepath + "imagetest/",
-                                    Fonts)
-
-#生成测试样例图片
-generator.gene_easyVerificationCode(100, basepath + "image2test/",
-                                    Fonts)
+    #使用的字体
+    Fonts = ["/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-B.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-BI.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-C.ttf"
+        # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-L.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-M.ttf"
+        # ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-LI.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-MI.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-R.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/Ubuntu-RI.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-B.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-BI.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-R.ttf"
+        ,"/usr/share/fonts/truetype/ubuntu-font-family/UbuntuMono-RI.ttf"]
 
 
+    basepath = param.PROJECTBASEPATH
 
-#去除噪声
-noise.saveAsBmp(basepath+"imagetest/",basepath+"image/")
+    # 生成训练样例图片
+    generator.gene_AllVerificationCodeWithNoise(1000, basepath + "imagetest/",
+                                                 Fonts)
 
-noise.saveAsBmp(basepath+"image2test/",basepath+"image2/")
+    #生成测试样例图片
+    generator.gene_AllVerificationCodeWithNoise(100, basepath + "image2test/",
+                                                 Fonts)
 
-shutil.move(basepath+"imagetest/name.txt",basepath+"image/name.txt")
-shutil.move(basepath+"image2test/name.txt",basepath+"image2/name.txt")
-#训练图片转csv
-spilter.split(basepath+"image/", basepath + "matrix/train.csv")
 
-#测试图片转csv
-spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
+
+    #去除噪声
+    noise.saveAsBmp(basepath+"imagetest/",basepath+"image/")
+
+    noise.saveAsBmp(basepath+"image2test/",basepath+"image2/")
+
+    shutil.move(basepath+"imagetest/name.txt", basepath+"image/name.txt")
+    shutil.move(basepath+"image2test/name.txt", basepath+"image2/name.txt")
+    #训练图片转csv
+    spilter.split(basepath+"image/", basepath + "matrix/train.csv")
+
+    #测试图片转csv
+    spilter.split(basepath + "image2/", basepath + "matrix/test.csv")
+
+    reGenerate = False
 
 #读取训练数据和测试数据
 train_df_self = pd.read_csv('matrix/train.csv')
 # print train_df_self.size
 
-train_df_kaggle = pd.read_csv('digitRecognizer/train.csv')
+train_df_kaggle = pd.read_csv('kaggle/train.csv')
 
 # print train_df_kaggle.size
 train_df = train_df_kaggle.append(train_df_self)
+train_df = train_df_self
 # print train_df.size
 # test_df = pd.read_csv('test.csv')
 X_train = train_df.drop('label', axis=1).values
@@ -143,6 +149,7 @@ decisionTree_clf = tree.DecisionTreeClassifier()
 
 #随机森林
 randomForest_clf = ske.RandomForestClassifier()
+
 # predictResult = predict(X_train, Y_train, test_df, randomForest_clf)
 #输出
 # saveResult(predictResult, 'randomForest_submission.csv')

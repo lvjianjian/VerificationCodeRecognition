@@ -37,7 +37,7 @@ def RGB2BlackWhite(filename,basepath,name):
             else:
                 im.putpixel( pos,(0,0,0))
 
-    point.load(im,basepath+name)
+    point.load(im, basepath+name)
 
 def saveAsBmp(imagepath,bathpath):
     listdir = os.listdir(imagepath)

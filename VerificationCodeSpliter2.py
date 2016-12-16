@@ -13,7 +13,7 @@ import numpy as np
 import os
 import VerificationCodeSpliter as sp
 import VerificationCodeGenerator as gene
-
+import clearpoint as cp
 # 周围向量
 arround = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
 
@@ -33,7 +33,7 @@ def cut_dbscan(im, threshold, extra_aligin, width, height):
     :return: list：[subimages]
     :return:
     """
-
+    count = 0
     pixels = im.load()
     height1 = im.height / 2
     queue = deque()
@@ -53,9 +53,11 @@ def cut_dbscan(im, threshold, extra_aligin, width, height):
             start = i
         if start == im.width - 1:
             break
+        count = 0
         #从该点开始寻找最大连通区域
         while len(queue) != 0:
             popleft = queue.popleft()
+            count += 1
             if(popleft[1] < y_top):
                 y_top = popleft[1]
             if(popleft[1] > y_bottom):
@@ -67,6 +69,8 @@ def cut_dbscan(im, threshold, extra_aligin, width, height):
             __visitArround(popleft[0], popleft[1], pixels, threshold, im.width, im.height, queue, visited)
         region = (x_left-extra_aligin, y_top-extra_aligin, x_right+1+extra_aligin, y_bottom+1+extra_aligin)
         start = x_right+1
+        if(count < 30):
+            continue
         subimage = im.crop(region)
         subimage = sp.clear_aligin(subimage,EXTRA_ALIGIN)
         subimage = subimage.resize((width, height), Image.ANTIALIAS)
@@ -127,11 +131,14 @@ def split(imagepath, save_filename):
     f_save = open(save_filename, "w")
     first = True
     for image_filename in listdir:
+        print image_filename
         im = Image.open(imagepath + image_filename)
         im = sp.preprocessImage(im)
         code = dict[image_filename.split(".")[0]] #验证码
-        r_list = splitOneImage(im,28,28) #验证码对应的矩阵
-        for i in range(len(r_list)):
+        r_list = splitOneImage(im, 28, 28) #验证码对应的矩阵
+        if(len(code) != len(r_list)):
+            print "drop " + image_filename
+        for i in range(min(len(code),len(r_list))):
             if(first):
                 first = False
                 string = "label"
@@ -141,16 +148,21 @@ def split(imagepath, save_filename):
             string = code[i]
             for j in range(len(r_list[i])):
                 string += ("," + str(r_list[i][j]))
-            f_save.write(string+"\n")
+            f_save.write(string + "\n")
     f.flush()
     f.close()
 
 if __name__ == '__main__':
-    im = Image.open("imagetest/1.png")
+    # im = Image.open("image/95.png")
+    im = Image.open("result.png")
     isShowSubImage = True
     im = sp.preprocessImage(im)
+    im.show()
     # sp.splitOneImage(im)
-    cut_dbscan(im, 200, EXTRA_ALIGIN, 28, 28)
+    cp.load(im, "./result_after.png")
+    im_after = Image.open("result_after.png")
+    im_after.show()
+    cut_dbscan(im_after, 200, EXTRA_ALIGIN, 28, 28)
 
 # pixel = im.load()
 # for x in range(im.height):

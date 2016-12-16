@@ -57,12 +57,12 @@ def saveImage(filename,size):
 
     for x in xrange(0,size[0]):
         for y in xrange(0,size[1]):
-            draw.point((x,y),t2val[(x,y)])
+            draw.point((x, y), t2val[(x, y)])
 
     image.save(filename)
 
 def load(im,basepath):
     image = im.convert("L")
     twoValue(image,100)
-    clearNoise(image,3,1)
+    clearNoise(image,2,1)
     saveImage(basepath,image.size)
