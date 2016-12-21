@@ -118,7 +118,7 @@ if __name__ == '__main__':
     # train = train_df_kaggle.append(train_df_self)
     # train = train_df_kaggle
     train = train_df_self
-    nb_epoch = 1 # Change to 100
+    nb_epoch = 3 # Change to 100
 
     batch_size = 128
     img_rows, img_cols = 28, 28
@@ -136,29 +136,46 @@ if __name__ == '__main__':
 
     nb_classes = trainY.shape[1]
 
+#=====================
+    # cnn = models.Sequential()
+    #
+    # cnn.add(conv.Convolution2D(nb_filters_1, nb_conv, nb_conv,  activation="relu", input_shape=(28, 28, 1), border_mode='same'))
+    # cnn.add(conv.Convolution2D(nb_filters_1, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # cnn.add(conv.MaxPooling2D(pool_size=(2, 2)))
+    #
+    # cnn.add(conv.Convolution2D(nb_filters_2, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # cnn.add(conv.Convolution2D(nb_filters_2, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # cnn.add(conv.MaxPooling2D(pool_size=(2, 2)))
+    #
+    # #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
+    # #cnn.add(conv.MaxPooling2D(strides=(2,2)))
+    #
+    # cnn.add(core.Flatten())
+    # cnn.add(core.Dropout(0.2))
+    # cnn.add(core.Dense(128, activation="relu")) # 4096
+    # cnn.add(core.Dense(nb_classes, activation="softmax"))
+#==============
     cnn = models.Sequential()
 
-    cnn.add(conv.Convolution2D(nb_filters_1, nb_conv, nb_conv,  activation="relu", input_shape=(28, 28, 1)))
-    cnn.add(conv.Convolution2D(nb_filters_1, nb_conv, nb_conv, activation="relu"))
+    cnn.add(conv.Convolution2D(32, 5, 5, activation='relu', input_shape=(28, 28, 1)))
     cnn.add(conv.MaxPooling2D(pool_size=(2,2)))
 
-    cnn.add(conv.Convolution2D(nb_filters_2, nb_conv, nb_conv, activation="relu"))
-    cnn.add(conv.Convolution2D(nb_filters_2, nb_conv, nb_conv, activation="relu"))
-    cnn.add(conv.MaxPooling2D(pool_size=(2, 2)))
-
-    #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-    #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-    #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-    #cnn.add(conv.Convolution2D(nb_filters_3, nb_conv, nb_conv, activation="relu", border_mode='same'))
-    #cnn.add(conv.MaxPooling2D(strides=(2,2)))
+    cnn.add(conv.Convolution2D(32, 3, 3, activation='relu'))
+    cnn.add(conv.MaxPooling2D())
 
     cnn.add(core.Flatten())
-    cnn.add(core.Dropout(0.2))
-    cnn.add(core.Dense(128, activation="relu")) # 4096
-    cnn.add(core.Dense(nb_classes, activation="softmax"))
+
+    cnn.add(core.Dense(output_dim=128, activation='relu'))
+    cnn.add(core.Dropout(0.5))
+
+    cnn.add(core.Dense(output_dim=62, activation='softmax'))
+
+    cnn.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     cnn.summary()
-    cnn.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
     #categorical_crossentropy
     cnn.fit(trainX, trainY, batch_size=batch_size, nb_epoch=nb_epoch, verbose=1)
 
@@ -195,3 +212,4 @@ if __name__ == '__main__':
     # print yPred
 
     # np.savetxt('mnist-vggnet.csv', np.c_[range(1,len(yPred)+1),yPred], delimiter=',', header = 'ImageId,Label', comments = '', fmt='%d')
+
